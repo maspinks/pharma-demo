@@ -45,7 +45,7 @@ const Home = () => (
         <List>
         <ContentListItemLink button key={'Review your accounts'} href="/accounts">
                 <ListItemIcon><BusinessIcon /></ListItemIcon>
-                <ListItemText primary={'Review your  Accounts'} />
+                <ListItemText primary={'Review your accounts'} />
               </ContentListItemLink>
               <ContentListItemLink button key={'Add a new account'} href="/account">
                 <ListItemIcon><AddIcon /></ListItemIcon>
