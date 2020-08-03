@@ -44,20 +44,32 @@ export default class ContactFormComponent extends React.Component {
 
 	onSubmitHandler = async (event) => {
 		event.preventDefault();
-		// let age = this.state.age;
-		// if (!Number(age)) {
-		//   alert("Your age must be a number");
-		// }
-		const contact: IContact =
+
+		let phone =  (this.state as any).phone;
+		let isValid = false;		
+		var phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+		if (phone.match(phoneRegex))
 		{
-				key: this.primaryKey,
-				name: (this.state as any).name,
-				email: (this.state as any).email,
-				phone: (this.state as any).phone,
+			isValid = true;				
 		}
-		//this.dalDb.addContact(contact);
-		await this.dbQueries.upsertContact(contact);
-		(this.props as any).history.push('/contacts');
+		else
+		{
+			alert("Invalid phone number.");
+		}
+
+		if (isValid)
+		{
+			const contact: IContact =
+			{
+					key: this.primaryKey,
+					name: (this.state as any).name,
+					email: (this.state as any).email,
+					phone: (this.state as any).phone,
+			}
+			//this.dalDb.addContact(contact);
+			await this.dbQueries.upsertContact(contact);
+			(this.props as any).history.push('/contacts');
+		}
 	}
 	onChangeHandler = (event) => {
 		let nam = event.target.name;

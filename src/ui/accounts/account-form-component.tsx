@@ -46,17 +46,32 @@ export default class AccountFormComponent extends React.Component {
 	onSubmitHandler = async (event) => {
 		event.preventDefault();
 		
-		const account: IAccount =
+		let phone =  (this.state as any).phone;
+		let isValid = false;		
+		var phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+		if (phone.match(phoneRegex))
 		{
-				key: this.primaryKey,
-				name: (this.state as any).name,
-				email: (this.state as any).email,
-				phone: (this.state as any).phone,
-				contacts: this.selectedContacts,
+			isValid = true;				
+		}
+		else
+		{
+			alert("Invalid phone number.");
 		}
 
-		await this.dbQueries.upsertAccount(account);
-		(this.props as any).history.push('/accounts');
+		if (isValid)
+		{
+			const account: IAccount =
+			{
+					key: this.primaryKey,
+					name: (this.state as any).name,
+					email: (this.state as any).email,
+					phone: (this.state as any).phone,
+					contacts: this.selectedContacts,
+			}
+
+			await this.dbQueries.upsertAccount(account);
+			(this.props as any).history.push('/accounts');
+		}
 	}
 	onChangeHandler = (event) => {
 		let nam = event.target.name;
