@@ -5,23 +5,15 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { DataQueries } from '../../dal/data-queries';
+import { IContactListItem, IContact } from '../../dal/data-model';
 
-// export function onUpdateInput()
-// {
-
-// }
-
-export default function AccountContactLink(props) {
-  const [myValue] = React.useState([] as string[]); 
+export default function AccountContactLink(props) {  
+  const [initialInput, setInitialInput] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const loading = open && options.length === 0;
+  const [isFirstLoad, setIsFirstLoad] = React.useState(true);
  
-  // onUpdateInput: React.pr = ()=>
-  // {
-
-  // }
-
   React.useEffect(() => {
     let active = true;
 
@@ -30,13 +22,36 @@ export default function AccountContactLink(props) {
     }
 
     (async () => {
+      
       const dbQueries = new DataQueries();
       const response = await dbQueries.getContacts(''); 
 
-      if (active) {
-        //setOptions(Object.keys(response).map((key) => countries[key].item[0]));
-        setOptions(response as any);
-      }
+      if (active) 
+      {
+          const selected: IContactListItem[] = [];       
+          const initialContacts = (props.initialContacts as number[]);
+
+          const items: IContactListItem[] = [];
+            (response as IContact[]).forEach(c =>
+              {
+                const item: IContactListItem =
+                {
+                  key: c.key,
+                  name: c.name,
+                }
+                items.push(item);
+
+                if (isFirstLoad && initialContacts && initialContacts.includes(+c.key))
+                {
+                    selected.push(item);  
+                    setIsFirstLoad(false);
+                }
+              });
+
+          setOptions(items as any);
+          if (isFirstLoad) {setInitialInput(selected as any)};
+       }
+      
     })();
 
     return () => {
@@ -51,13 +66,12 @@ export default function AccountContactLink(props) {
   }, [open]);
 
   return (
-      <div>
-          <h1> MY Value: {myValue} </h1>
-    <Autocomplete       
-     // onUpdateInput={this.handleUpdateInput.bind(this)}
+      <div>        
+    <Autocomplete  
+      value={initialInput}
       multiple={true}
       disableCloseOnSelect={true}
-      id="asynchronous-demo"
+      id="accountContactAuto"
       style={{ width: 300 }}
       open={open}
       onOpen={() => {
@@ -67,15 +81,20 @@ export default function AccountContactLink(props) {
         setOpen(false);
       }}
       onChange={(event, newValue) => {
-        props.onUpdateInput(event, newValue);
+        //console.log("onChange");
+
+        // initialInput.push(...newValue as never[]);
+        setInitialInput(newValue as any);
+        props.onUpdateInput(newValue);
+        //props.onUpdateInput(event, newValue);
       }}
       onInputChange={(event, newValue) => {
-        props.onUpdateInput(event, newValue);
+        console.log("onInputChange");
+        //setInitialInput([newValue]);
       }}
       getOptionSelected={(option, value) =>
         { 
-          const isSelected = (option as any).key === (value as any).key;
-          if (isSelected) {props.onUpdateInput((value as any).key);}
+          const isSelected = (option as any).key === (value as any).key;          
           return isSelected; 
         } }
       getOptionLabel={(option) => (option as any).name}

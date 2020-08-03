@@ -18,6 +18,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ContactsIcon from '@material-ui/icons/Contacts';
 import BusinessIcon from '@material-ui/icons/Business';
 import AddIcon from '@material-ui/icons/Add';
+import HomeIcon from '@material-ui/icons/Home';
 
 const drawerWidth = 240;
 
@@ -146,6 +147,13 @@ export default function ContentLayout() {
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </div>
+        <Divider />
+        <List>
+           <ListItemLink button key={'Home'} href="/home">
+              <ListItemIcon><HomeIcon /></ListItemIcon>
+              <ListItemText primary={'Home'} />
+            </ListItemLink>           
+        </List>
         <Divider />
         <List>
            <ListItemLink button key={'View Contacts'} href="/contacts">

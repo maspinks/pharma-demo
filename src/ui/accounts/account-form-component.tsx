@@ -1,9 +1,7 @@
-// src/components/Hello.tsx
-
 import * as React from 'react';
 import Button from "@material-ui/core/Button";
 import TextField from '@material-ui/core/TextField';
-import { IAccount } from '../../dal/data-model';
+import { IAccount, IContactListItem } from '../../dal/data-model';
 import { DataQueries } from '../../dal/data-queries';
 import { Container, Grid } from '@material-ui/core';
 import AccountContactLink from './account-contact';
@@ -36,10 +34,13 @@ export default class AccountFormComponent extends React.Component {
 				this.setState({email: data.email});
 				this.setState({name: data.name});
 				this.setState({phone: data.phone});
+				this.selectedContacts = data.contacts ?? [];
+				this.setState({contacts: data.contacts});
 			}
 		}
 	}
 
+	protected selectedContacts : number[] = []
 	protected dbQueries;
 
 	onSubmitHandler = async (event) => {
@@ -51,8 +52,9 @@ export default class AccountFormComponent extends React.Component {
 				name: (this.state as any).name,
 				email: (this.state as any).email,
 				phone: (this.state as any).phone,
+				contacts: this.selectedContacts,
 		}
-		//this.dalDb.addAccount(account);
+
 		await this.dbQueries.upsertAccount(account);
 		(this.props as any).history.push('/accounts');
 	}
@@ -67,10 +69,26 @@ export default class AccountFormComponent extends React.Component {
 		(this.props as any).history.push('/accounts');   		
 	}	
 
-	onAutoSeleted= (value)=>
+	onContactsChanged = (value)=>
 	{
-		
-		console.log(value);
+		this.selectedContacts = (value as IContactListItem[]).map(c => c.key);
+
+		// const index = this.selectedContacts.indexOf(value, 0);
+		// if (index > -1) {
+		// 	if (!isSelected)
+		// 	{
+		// 		this.selectedContacts.splice(index, 1);
+		// 	}
+		// }
+		// else
+		// {
+		// 	if (isSelected)
+		// 	{
+		// 		this.selectedContacts.push(value);
+		// 	}
+		// }
+		//this.setState({contacts: contacts});  		
+		//console.log(value);
 	}
 	render() {
 		return (
@@ -127,7 +145,8 @@ export default class AccountFormComponent extends React.Component {
 			<br/>
 			<br/>
 			<AccountContactLink 
-				onUpdateInput={this.onAutoSeleted.bind(this)}
+				onUpdateInput={this.onContactsChanged.bind(this)}
+				initialContacts={(this.state as any).contacts}
 			/>		
 
 

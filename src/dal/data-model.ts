@@ -9,6 +9,11 @@ export interface IContact extends IData
 	phone: string;
 }
 
+export interface IContactListItem extends IData
+{
+    name: string;
+}
+
 export interface IAccount extends IData
 {	
 	name: string;

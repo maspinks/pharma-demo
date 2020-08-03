@@ -6,12 +6,18 @@ import ContactFormComponent from './ui/contacts/contact-form-component';
 import AccountsListComponent from './ui/accounts/account-list-component';
 import AccountFormComponent from './ui/accounts/account-form-component';
 import ContentLayout from './ui/content-layout';
-
+import { Container, Grid } from '@material-ui/core';
 
 /* Home component */
 const Home = () => (
   <div>
-    <h2>Home</h2>
+    <Container maxWidth="lg">
+			<Grid container >
+			<Grid item xs={12}>
+      <h1>Welcome to Pharma CRM</h1>
+    </Grid>
+    </Grid>
+    </Container>
   </div>
 );
 
@@ -23,6 +29,7 @@ export default function App() {
      </ContentLayout>
       
       <Route path="/" component={Home} />
+      <Route path="/Home" component={Home} />
       <Route path="/contacts" component={ContactsListComponent} />
       <Route path="/contact" component={ContactFormComponent} />
       <Route path="/accounts" component={AccountsListComponent} />      
